@@ -114,6 +114,22 @@ func (b *bitbuf) ReadInt16Part(bits uint32) int16 {
 	return int16(b.ReadUint16Part(bits))
 }
 
+func (b *bitbuf) WriteUint32(value uint32) {
+	b.WriteUint32Part(value, 32)
+}
+
+func (b *bitbuf) ReadUint32() uint32 {
+	return b.ReadUint32Part(32)
+}
+
+func (b *bitbuf) WriteInt32Part(value int32, bits uint32) {
+	b.WriteUint32Part(uint32(value), 32)
+}
+
+func (b *bitbuf) ReadInt32Part(bits uint32) int32 {
+	return int32(b.ReadUint32Part(32))
+}
+
 func (b *bitbuf) WriteUint32Part(value uint32, bits uint32) {
 	w := byte(value >> 0)
 	x := byte(value >> 8)
