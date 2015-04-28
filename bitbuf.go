@@ -1,5 +1,7 @@
 package bitbuf
 
+import "math"
+
 type bitbuf struct {
 	buf  []byte
 	pos  uint32
@@ -184,6 +186,14 @@ func (b *bitbuf) ReadUint32Part(bits uint32) uint32 {
 	}
 
 	return uint32(w | (x << 8) | (y << 16) | (z << 24))
+}
+
+func (b *bitbuf) WriteFloat32(value float32) {
+	b.WriteUint32(math.Float32bits(value))
+}
+
+func (b *bitbuf) ReadFloat32() float32 {
+	return math.Float32frombits(b.ReadUint32())
 }
 
 func (b *bitbuf) writeByte(value byte, bits uint32) {
