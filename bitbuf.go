@@ -124,8 +124,16 @@ func (b *bitbuf) ReadUint32() uint32 {
 	return b.ReadUint32Part(32)
 }
 
+func (b *bitbuf) WriteInt32(value int32) {
+	b.WriteInt32Part(value, 32)
+}
+
 func (b *bitbuf) WriteInt32Part(value int32, bits uint32) {
 	b.WriteUint32Part(uint32(value), 32)
+}
+
+func (b *bitbuf) ReadInt32() int32 {
+	return b.ReadInt32Part(32)
 }
 
 func (b *bitbuf) ReadInt32Part(bits uint32) int32 {
@@ -194,6 +202,48 @@ func (b *bitbuf) WriteFloat32(value float32) {
 
 func (b *bitbuf) ReadFloat32() float32 {
 	return math.Float32frombits(b.ReadUint32())
+}
+
+func (b *bitbuf) WriteUint64Part(value uint64, bits uint32) {
+	if bits <= 32 {
+		b.WriteUint32Part(uint32(value&0xFFFFFFFF), bits)
+	} else {
+		b.WriteUint32Part(uint32(value), 32)
+		b.WriteUint32Part(uint32(value>>32), bits-32)
+	}
+}
+
+func (b *bitbuf) ReadUint64Part(bits uint32) uint64 {
+	if bits <= 32 {
+		return uint64(b.ReadUint32Part(bits))
+	}
+	a := uint64(b.ReadUint32Part(32))
+	x := uint64(b.ReadUint32Part(bits - 32))
+	return a | (x << 32)
+}
+
+func (b *bitbuf) WriteUint64(value uint64) {
+	b.WriteUint64Part(value, 64)
+}
+
+func (b *bitbuf) ReadUint64() uint64 {
+	return b.ReadUint64Part(64)
+}
+
+func (b *bitbuf) WriteInt64Part(value int64, bits uint32) {
+	b.WriteUint64Part(uint64(value), bits)
+}
+
+func (b *bitbuf) ReadInt64Part(bits uint32) int64 {
+	return int64(b.ReadUint64Part(bits))
+}
+
+func (b *bitbuf) WriteInt64(value int64) {
+	b.WriteInt64Part(value, 64)
+}
+
+func (b *bitbuf) ReadInt64() int64 {
+	return b.ReadInt64Part(64)
 }
 
 func (b *bitbuf) writeByte(value byte, bits uint32) {
