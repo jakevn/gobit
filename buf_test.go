@@ -1,23 +1,23 @@
-package bitbuf
+package gobit
 
 import "testing"
 
-func NewBitbufProperSize(t *testing.T) {
-	buf := NewBitbuf(1000)
+func NewBufProperSize(t *testing.T) {
+	buf := NewBuf(1000)
 	if buf.Size() != 8000 {
 		t.Error("Expected size of 8000, got ", buf.Size)
 	}
 }
 
-func NewBitbufProperPos(t *testing.T) {
-	buf := NewBitbuf(1000)
+func NewBufProperPos(t *testing.T) {
+	buf := NewBuf(1000)
 	if buf.Pos() != 0 {
 		t.Error("Expected pos of 0, got ", buf.Size)
 	}
 }
 
 func WriteReadBool(t *testing.T) {
-	buf := NewBitbuf(1)
+	buf := NewBuf(1)
 	var b bool
 	b = true
 	buf.WriteBool(b)
@@ -28,7 +28,7 @@ func WriteReadBool(t *testing.T) {
 }
 
 func WriteReadByte(t *testing.T) {
-	buf := NewBitbuf(1)
+	buf := NewBuf(1)
 	var b byte
 	b = 123
 	buf.WriteByte(b)
@@ -39,7 +39,7 @@ func WriteReadByte(t *testing.T) {
 }
 
 func WriteReadBytePartial(t *testing.T) {
-	buf := NewBitbuf(1)
+	buf := NewBuf(1)
 	var b byte
 	b = 5
 	buf.WriteBytePart(b, 4)
@@ -50,7 +50,7 @@ func WriteReadBytePartial(t *testing.T) {
 }
 
 func WriteReadInt16(t *testing.T) {
-	buf := NewBitbuf(16)
+	buf := NewBuf(16)
 	var i int16
 	i = 20912
 	buf.WriteInt16(i)
@@ -61,7 +61,7 @@ func WriteReadInt16(t *testing.T) {
 }
 
 func WriteReadInt16Partial(t *testing.T) {
-	buf := NewBitbuf(11)
+	buf := NewBuf(11)
 	var i int16
 	i = -1024
 	buf.WriteInt16Part(i, 11)
@@ -72,7 +72,7 @@ func WriteReadInt16Partial(t *testing.T) {
 }
 
 func WriteReadUint16(t *testing.T) {
-	buf := NewBitbuf(16)
+	buf := NewBuf(16)
 	var i uint16
 	i = 31234
 	buf.WriteUint16(i)
@@ -83,7 +83,7 @@ func WriteReadUint16(t *testing.T) {
 }
 
 func WriteReadUint16Partial(t *testing.T) {
-	buf := NewBitbuf(12)
+	buf := NewBuf(12)
 	var i uint16
 	i = 942
 	buf.WriteUint16Part(i, 12)
@@ -94,7 +94,7 @@ func WriteReadUint16Partial(t *testing.T) {
 }
 
 func WriteReadUint32Part(t *testing.T) {
-	buf := NewBitbuf(24)
+	buf := NewBuf(24)
 	var i uint32
 	i = 1234567
 	buf.WriteUint32Part(i, 24)
