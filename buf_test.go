@@ -169,3 +169,13 @@ func WriteReadFloat64(t *testing.T) {
 		t.Error("Expcted 1.234567890, got ", f)
 	}
 }
+
+func WriteReadString(t *testing.T) {
+	buf := NewBuf(128)
+	s := "This is a test string."
+	buf.WriteString(s)
+	r := buf.ReadString()
+	if r != s {
+		t.Error("Expected "+s+", got ", r)
+	}
+}

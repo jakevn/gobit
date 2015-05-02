@@ -254,6 +254,30 @@ func (b *buf) ReadFloat64() float64 {
 	return math.Float64frombits(b.ReadUint64())
 }
 
+func (b *buf) WriteString(value string) {
+	b.WriteByteArray([]byte(value))
+}
+
+func (b *buf) ReadString() string {
+	return string(b.ReadByteArray())
+}
+
+func (b *buf) WriteByteArray(value []byte) {
+	b.WriteInt32(int32(len(value)))
+	for _, v := range value {
+		b.writeByte(v, 8)
+	}
+}
+
+func (b *buf) ReadByteArray() []byte {
+	count := b.ReadInt32()
+	res := make([]byte, count)
+	for i, _ := range res {
+		res[i] = b.readByte(8)
+	}
+	return res
+}
+
 func (b *buf) writeByte(value byte, bits uint32) {
 	if bits == 0 {
 		return
