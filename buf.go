@@ -8,11 +8,11 @@ type buf struct {
 	size uint32
 }
 
-func NewBuf(size uint32) *buf {
-	return &buf{make([]byte, size), 0, size * 8}
+func NewBuf(byteSize uint32) *buf {
+	return &buf{make([]byte, byteSize), 0, byteSize * 8}
 }
 
-func (b *buf) Size() uint32 {
+func (b *buf) BitSize() uint32 {
 	return b.size
 }
 
@@ -244,6 +244,14 @@ func (b *buf) WriteInt64(value int64) {
 
 func (b *buf) ReadInt64() int64 {
 	return b.ReadInt64Part(64)
+}
+
+func (b *buf) WriteFloat64(value float64) {
+	b.WriteUint64(math.Float64bits(value))
+}
+
+func (b *buf) ReadFloat64() float64 {
+	return math.Float64frombits(b.ReadUint64())
 }
 
 func (b *buf) writeByte(value byte, bits uint32) {

@@ -4,15 +4,15 @@ import "testing"
 
 func NewBufProperSize(t *testing.T) {
 	buf := NewBuf(1000)
-	if buf.Size() != 8000 {
-		t.Error("Expected size of 8000, got ", buf.Size)
+	if buf.BitSize() != 8000 {
+		t.Error("Expected size of 8000, got ", buf.BitSize())
 	}
 }
 
 func NewBufProperPos(t *testing.T) {
 	buf := NewBuf(1000)
 	if buf.Pos() != 0 {
-		t.Error("Expected pos of 0, got ", buf.Size)
+		t.Error("Expected pos of 0, got ", buf.Pos())
 	}
 }
 
@@ -50,7 +50,7 @@ func WriteReadBytePartial(t *testing.T) {
 }
 
 func WriteReadInt16(t *testing.T) {
-	buf := NewBuf(16)
+	buf := NewBuf(2)
 	var i int16
 	i = 20912
 	buf.WriteInt16(i)
@@ -61,7 +61,7 @@ func WriteReadInt16(t *testing.T) {
 }
 
 func WriteReadInt16Partial(t *testing.T) {
-	buf := NewBuf(11)
+	buf := NewBuf(2)
 	var i int16
 	i = -1024
 	buf.WriteInt16Part(i, 11)
@@ -72,7 +72,7 @@ func WriteReadInt16Partial(t *testing.T) {
 }
 
 func WriteReadUint16(t *testing.T) {
-	buf := NewBuf(16)
+	buf := NewBuf(2)
 	var i uint16
 	i = 31234
 	buf.WriteUint16(i)
@@ -83,7 +83,7 @@ func WriteReadUint16(t *testing.T) {
 }
 
 func WriteReadUint16Partial(t *testing.T) {
-	buf := NewBuf(12)
+	buf := NewBuf(2)
 	var i uint16
 	i = 942
 	buf.WriteUint16Part(i, 12)
@@ -94,12 +94,78 @@ func WriteReadUint16Partial(t *testing.T) {
 }
 
 func WriteReadUint32Part(t *testing.T) {
-	buf := NewBuf(24)
+	buf := NewBuf(3)
 	var i uint32
 	i = 1234567
 	buf.WriteUint32Part(i, 24)
 	r := buf.ReadUint32Part(24)
 	if r != i {
 		t.Error("Expected 1234567, got ", r)
+	}
+}
+
+func WriteReadUint32(t *testing.T) {
+	buf := NewBuf(4)
+	var i uint32
+	i = 31392234
+	buf.WriteUint32(i)
+	r := buf.ReadUint32()
+	if r != i {
+		t.Error("Expected 31392234, got ", r)
+	}
+}
+
+func WriteReadUint64Part(t *testing.T) {
+	buf := NewBuf(7)
+	var i uint64
+	i = 1234567890
+	buf.WriteUint64Part(i, 56)
+	r := buf.ReadUint64Part(56)
+	if r != i {
+		t.Error("Expected 1234567890, got ", r)
+	}
+}
+
+func WriteReadUint64(t *testing.T) {
+	buf := NewBuf(8)
+	var i uint64
+	i = 12345678901234
+	buf.WriteUint64(i)
+	r := buf.ReadUint64()
+	if r != i {
+		t.Error("Expected 12345678901234, got ", r)
+	}
+}
+
+func WriteReadInt64Part(t *testing.T) {
+	buf := NewBuf(7)
+	var i int64
+	i = -1234567
+	buf.WriteInt64Part(i, 56)
+	r := buf.ReadInt64Part(56)
+	if r != i {
+		t.Error("Expected -1234567, got ", r)
+	}
+}
+
+func WriteReadFloat32(t *testing.T) {
+	buf := NewBuf(4)
+	var f float32
+	f = 1.234567
+	buf.WriteFloat32(f)
+	r := buf.ReadFloat32()
+	if r != f {
+		t.Error("Expected 1.234567, got ", r)
+	}
+}
+
+func WriteReadFloat64(t *testing.T) {
+	buf := NewBuf(8)
+	var f float64
+	f = 1.234567890
+	buf.WriteFloat64(f)
+	r := buf.ReadFloat64()
+	if r != f {
+		t.Error("Expcted 1.234567890, got ", f)
 	}
 }
