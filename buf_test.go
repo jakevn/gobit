@@ -2,21 +2,21 @@ package gobit
 
 import "testing"
 
-func NewBufProperSize(t *testing.T) {
+func TestNewBufProperSize(t *testing.T) {
 	buf := NewBuf(1000)
 	if buf.BitSize() != 8000 {
 		t.Error("Expected size of 8000, got ", buf.BitSize())
 	}
 }
 
-func NewBufProperPos(t *testing.T) {
+func TestNewBufProperPos(t *testing.T) {
 	buf := NewBuf(1000)
 	if buf.Pos() != 0 {
 		t.Error("Expected pos of 0, got ", buf.Pos())
 	}
 }
 
-func WriteReadBool(t *testing.T) {
+func TestWriteReadBool(t *testing.T) {
 	buf := NewBuf(1)
 	var b bool
 	b = true
@@ -27,7 +27,7 @@ func WriteReadBool(t *testing.T) {
 	}
 }
 
-func WriteReadByte(t *testing.T) {
+func TestWriteReadByte(t *testing.T) {
 	buf := NewBuf(1)
 	var b byte
 	b = 123
@@ -38,7 +38,7 @@ func WriteReadByte(t *testing.T) {
 	}
 }
 
-func WriteReadBytePartial(t *testing.T) {
+func TestWriteReadBytePartial(t *testing.T) {
 	buf := NewBuf(1)
 	var b byte
 	b = 5
@@ -49,7 +49,7 @@ func WriteReadBytePartial(t *testing.T) {
 	}
 }
 
-func WriteReadInt16(t *testing.T) {
+func TestWriteReadInt16(t *testing.T) {
 	buf := NewBuf(2)
 	var i int16
 	i = 20912
@@ -60,7 +60,7 @@ func WriteReadInt16(t *testing.T) {
 	}
 }
 
-func WriteReadInt16Partial(t *testing.T) {
+func TestWriteReadInt16Partial(t *testing.T) {
 	buf := NewBuf(2)
 	var i int16
 	i = -1024
@@ -71,7 +71,7 @@ func WriteReadInt16Partial(t *testing.T) {
 	}
 }
 
-func WriteReadUint16(t *testing.T) {
+func TestWriteReadUint16(t *testing.T) {
 	buf := NewBuf(2)
 	var i uint16
 	i = 31234
@@ -82,7 +82,7 @@ func WriteReadUint16(t *testing.T) {
 	}
 }
 
-func WriteReadUint16Partial(t *testing.T) {
+func TestWriteReadUint16Partial(t *testing.T) {
 	buf := NewBuf(2)
 	var i uint16
 	i = 942
@@ -93,7 +93,7 @@ func WriteReadUint16Partial(t *testing.T) {
 	}
 }
 
-func WriteReadUint32Part(t *testing.T) {
+func TestWriteReadUint32Part(t *testing.T) {
 	buf := NewBuf(3)
 	var i uint32
 	i = 1234567
@@ -104,7 +104,7 @@ func WriteReadUint32Part(t *testing.T) {
 	}
 }
 
-func WriteReadUint32(t *testing.T) {
+func TestWriteReadUint32(t *testing.T) {
 	buf := NewBuf(4)
 	var i uint32
 	i = 31392234
@@ -115,7 +115,7 @@ func WriteReadUint32(t *testing.T) {
 	}
 }
 
-func WriteReadUint64Part(t *testing.T) {
+func TestWriteReadUint64Part(t *testing.T) {
 	buf := NewBuf(7)
 	var i uint64
 	i = 1234567890
@@ -126,7 +126,7 @@ func WriteReadUint64Part(t *testing.T) {
 	}
 }
 
-func WriteReadUint64(t *testing.T) {
+func TestWriteReadUint64(t *testing.T) {
 	buf := NewBuf(8)
 	var i uint64
 	i = 12345678901234
@@ -137,7 +137,7 @@ func WriteReadUint64(t *testing.T) {
 	}
 }
 
-func WriteReadInt64Part(t *testing.T) {
+func TestWriteReadInt64Part(t *testing.T) {
 	buf := NewBuf(7)
 	var i int64
 	i = -1234567
@@ -148,7 +148,7 @@ func WriteReadInt64Part(t *testing.T) {
 	}
 }
 
-func WriteReadFloat32(t *testing.T) {
+func TestWriteReadFloat32(t *testing.T) {
 	buf := NewBuf(4)
 	var f float32
 	f = 1.234567
@@ -159,7 +159,7 @@ func WriteReadFloat32(t *testing.T) {
 	}
 }
 
-func WriteReadFloat64(t *testing.T) {
+func TestWriteReadFloat64(t *testing.T) {
 	buf := NewBuf(8)
 	var f float64
 	f = 1.234567890
@@ -170,7 +170,7 @@ func WriteReadFloat64(t *testing.T) {
 	}
 }
 
-func WriteReadString(t *testing.T) {
+func TestWriteReadString(t *testing.T) {
 	buf := NewBuf(128)
 	s := "This is a test string."
 	buf.WriteString(s)
