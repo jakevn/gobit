@@ -1,11 +1,13 @@
 package gobit
 
-import "math"
+import (
+	"math"
+)
 
 type Buf struct {
-	buf  []byte
-	pos  uint32
-	size uint32
+	Bytes []byte
+	pos   uint32
+	size  uint32
 }
 
 func NewBuf(byteSize uint32) *Buf {
@@ -34,8 +36,8 @@ func (b *Buf) SetPos(pos uint32) {
 
 func (b *Buf) Reset() {
 	b.pos = 0
-	for i, _ := range b.buf {
-		b.buf[i] = 0
+	for i, _ := range b.Bytes {
+		b.Bytes[i] = 0
 	}
 }
 
@@ -80,11 +82,17 @@ func (b *Buf) WriteUint16(value uint16) {
 }
 
 func (b *Buf) WriteUint16Part(value uint16, bits uint32) {
-	if bits <= 8 {
-		b.writeByte(byte(value&0xFF), bits)
-	} else {
-		b.writeByte(byte(value&0xFF), 8)
-		b.writeByte(byte(value>>8), bits-8)
+	w := byte(value >> 0)
+	x := byte(value >> 8)
+
+	switch (bits + 7) / 8 {
+	case 1:
+		b.writeByte(w, bits)
+		break
+	case 2:
+		b.writeByte(w, 8)
+		b.writeByte(x, bits-8)
+		break
 	}
 }
 
@@ -93,11 +101,20 @@ func (b *Buf) ReadUint16() uint16 {
 }
 
 func (b *Buf) ReadUint16Part(bits uint32) uint16 {
-	if bits <= 8 {
-		return uint16(b.readByte(bits))
-	} else {
-		return uint16(b.readByte(8) | (b.readByte(bits-8) << 8))
+	var w, x int32
+	w, x = 0, 0
+
+	switch (bits + 7) / 8 {
+	case 1:
+		w = int32(b.readByte(bits))
+		break
+	case 2:
+		w = int32(b.readByte(8))
+		x = int32(b.readByte(bits - 8))
+		break
 	}
+
+	return uint16(w | (x << 8))
 }
 
 func (b *Buf) WriteInt16(value int16) {
@@ -137,7 +154,7 @@ func (b *Buf) ReadInt32() int32 {
 }
 
 func (b *Buf) ReadInt32Part(bits uint32) int32 {
-	return int32(b.ReadUint32Part(32))
+	return int32(b.ReadUint32Part(bits))
 }
 
 func (b *Buf) WriteUint32Part(value uint32, bits uint32) {
@@ -290,10 +307,10 @@ func (b *Buf) writeByte(value byte, bits uint32) {
 
 	if remain >= 0 {
 		mask := byte(0xFF>>free) | (0xFF << (8 - remain))
-		b.buf[p] = byte((b.buf[p] & mask) | (value << used))
+		b.Bytes[p] = byte((b.Bytes[p] & mask) | (value << used))
 	} else {
-		b.buf[p] = byte(b.buf[p]&(0xFF>>free) | (value << used))
-		b.buf[p+1] = byte((b.buf[p+1] & (0xFF << (bits - free))) | (value >> free))
+		b.Bytes[p] = byte(b.Bytes[p]&(0xFF>>free) | (value << used))
+		b.Bytes[p+1] = byte((b.Bytes[p+1] & (0xFF << (bits - free))) | (value >> free))
 	}
 
 	b.pos += bits
@@ -309,15 +326,18 @@ func (b *Buf) readByte(bits uint32) byte {
 	used := b.pos % 8
 
 	if used == 0 && bits == 8 {
-		value = b.buf[p]
+		value = b.Bytes[p]
 	} else {
-		first := b.buf[p] >> used
+		first := b.Bytes[p] >> used
 		remain := bits - (8 - used)
+		if remain > 8 {
+			remain = 0
+		}
 
 		if remain < 1 {
 			value = byte(first & (0xFF >> (8 - bits)))
 		} else {
-			second := b.buf[p+1] & (0xFF >> (8 - remain))
+			second := b.Bytes[p+1] & (0xFF >> (8 - remain))
 			value = byte(first | (second << (bits - remain)))
 		}
 	}
